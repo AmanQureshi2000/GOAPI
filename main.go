@@ -45,11 +45,17 @@ func main() {
 	}
 	defer db.Close()
 
+	port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080" // Default for local dev
+    }
+
 	// 4. Define Routes
 	http.HandleFunc("/items", handleItems)
 
-	fmt.Println("Server starting at :5000")
-	log.Fatal(http.ListenAndServe(":5000", nil))
+	fmt.Printf("Server starting on port %s\n", port)
+    // IMPORTANT: Listen on "0.0.0.0" so Render can route traffic to it
+    log.Fatal(http.ListenAndServe("0.0.0.0:"+port, nil))
 }
 
 func handleItems(w http.ResponseWriter, r *http.Request) {
